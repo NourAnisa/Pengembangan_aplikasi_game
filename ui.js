@@ -17,6 +17,13 @@
   let currentState = null;
   let previousObjective = '';
   let lastFocusedControl = null;
+  let qualityApplied = false;
+  let preferredQuality = 'auto';
+  try {
+    const savedQuality = localStorage.getItem('sungai-quality');
+    if (['auto', 'high', 'low'].includes(savedQuality)) preferredQuality = savedQuality;
+  } catch { /* Play remains available when storage is blocked. */ }
+  $('#quality-select').value = preferredQuality;
   const pressedPointers = new Map();
   const activeDirections = new Map();
 
@@ -35,7 +42,11 @@
     return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
   }
   function startGame(restart = false) {
-    if (!engine()) { announce('Permainan belum selesai dimuat. Muat ulang halaman, lalu coba lagi.'); return; }
+    const state = engine()?.getState();
+    if (!state || state.ready === false || state.renderMode === 'unavailable') {
+      announce(state?.rendererMessage || 'Dunia permainan sedang disiapkan. Tunggu hingga tombol mulai aktif.');
+      return;
+    }
     releaseDirections();
     closeAllDialogs();
     landing.hidden = true;
@@ -85,9 +96,39 @@
     engine()?.resume('manual');
     focusCanvas();
   }
+  function updateRendererStatus(state) {
+    const unavailable = state?.renderMode === 'unavailable';
+    const ready = !!state && state.ready !== false && !unavailable;
+    const mode2d = state?.renderMode === '2d' || state?.renderMode === 'legacy';
+    $('#start-game').disabled = !ready;
+    $('#start-label').textContent = ready ? 'Mulai petualangan' : unavailable ? '3D belum tersedia' : 'Menyiapkan dunia 3D';
+    const status = $('#renderer-status');
+    const message = state?.rendererMessage || (unavailable
+      ? 'Grafik 3D belum tersedia. Aktifkan akselerasi grafis di browser atau gunakan versi 2D.'
+      : ready
+        ? mode2d ? 'Versi 2D siap dimainkan di perangkat ini.' : 'Dunia 3D siap. Selamat datang di Desa Tepian.'
+        : 'Memuat desa, cahaya, dan aliran sungai…');
+    if (status.textContent !== message) status.textContent = message;
+    status.classList.toggle('is-error', unavailable);
+    $('#fallback-2d').hidden = !unavailable;
+    $('#quality-select').disabled = !ready || mode2d;
+    $('#game-renderer-mode').textContent = mode2d ? 'MODE 2D · KOMPATIBILITAS' : 'PERSPEKTIF 3D';
+    document.documentElement.dataset.renderMode = unavailable ? 'unavailable' : mode2d ? '2d' : '3d';
+    if (ready && !qualityApplied && typeof engine()?.setQuality === 'function') {
+      qualityApplied = true;
+      engine().setQuality(preferredQuality);
+    }
+  }
   function updateState(state) {
     if (!state) return;
     currentState = state;
+    updateRendererStatus(state);
+    if (state.renderMode === 'unavailable' && inGame) {
+      inGame = false;releaseDirections();closeAllDialogs();
+      gameScreen.hidden = true;landing.hidden = false;
+      window.scrollTo({top:0,behavior:'instant'});
+      $('#fallback-2d').focus({preventScroll:true});
+    }
     const ended = ['won', 'lost'].includes(state.status);
     $('#pause-button').setAttribute('aria-label', ended ? 'Lihat hasil misi' : 'Jeda permainan');
     $('#pause-button span').textContent = ended ? 'Hasil misi' : 'Jeda';
@@ -211,6 +252,12 @@
   $('#view-world-button').addEventListener('click', () => { closeDialog(endingDialog); canvas.focus({preventScroll:true}); });
   $('#play-again-button').addEventListener('click', () => startGame(true));
   $('#sound-button').addEventListener('click', () => { engine()?.setSound(!currentState?.soundEnabled); updateState(engine()?.getState()); });
+  $('#quality-select').addEventListener('change', event => {
+    preferredQuality = event.target.value;
+    try { localStorage.setItem('sungai-quality', preferredQuality); } catch { /* Optional preference only. */ }
+    engine()?.setQuality?.(preferredQuality);
+    announce(`Kualitas visual: ${event.target.selectedOptions[0].textContent}.`);
+  });
   $('#interact-button').addEventListener('click', () => { engine()?.interact(); focusCanvas(); });
   $('#fullscreen-button').addEventListener('click', async () => {
     try { if (document.fullscreenElement) await document.exitFullscreen(); else if (gameScreen.requestFullscreen) await gameScreen.requestFullscreen(); }
@@ -227,7 +274,9 @@
   window.addEventListener('blur', releaseDirections);
   document.addEventListener('visibilitychange', () => { if (document.hidden) releaseDirections(); });
   window.addEventListener('sungai:state', event => updateState(event.detail));
+  window.addEventListener('sungai:ready', event => updateState(engine()?.getState() || event.detail));
   window.addEventListener('sungai:dialogue', event => showDialogue(event.detail));
   window.addEventListener('sungai:ending', event => showEnding(event.detail));
+  updateRendererStatus(engine()?.getState());
   updateState(engine()?.getState());
 })();

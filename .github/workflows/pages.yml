@@ -9,6 +9,9 @@ on:
       - 'ui.js'
       - 'game.js'
       - 'engine.js'
+      - 'game-2d.js'
+      - 'renderer3d.js'
+      - 'vendor/**'
       - 'docs.html'
       - 'docs/**'
       - 'assets/**'
@@ -40,9 +43,9 @@ jobs:
       - name: Prepare static site
         run: |
           mkdir -p _site
-          cp index.html styles.css ui.js game.js docs.html _site/
+          cp index.html styles.css ui.js game.js game-2d.js renderer3d.js docs.html _site/
           if [ -f engine.js ]; then cp engine.js _site/; fi
-          cp -R assets docs _site/
+          cp -R assets docs vendor _site/
           cp Pertemuan_6_7_8_Properti_Storyboard_Laporan_OBE.pptx _site/
           cp STI7356-Pengembangan_Aplikasi_Game.pdf _site/
       - name: Upload site

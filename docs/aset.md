@@ -13,9 +13,9 @@ Dokumen ini memisahkan ilustrasi rancangan dari bukti proyek dan mencatat asal a
 
 SVG tersebut dibuat untuk proyek ini menggunakan bentuk vektor dan tidak menyalin aset game komersial.
 
-## Aset visual game
+## Aset edisi 2D dan potret dialog
 
-Aset berikut dibuat khusus menggunakan image_gen bawaan pada16Oktober2026. Seluruh PNG disalin dari hasil generasi asli tanpa overlay teks. Transparansi karakter dan perahu diperiksa. Canvas memotong margin transparan pada saat rendering dan menggambar indikator interaksi, air, serta partikel secara terpisah.
+Aset berikut dibuat khusus menggunakan image_gen bawaan pada 16 Oktober 2026. Seluruh PNG disalin dari hasil generasi asli tanpa overlay teks. Transparansi karakter dan perahu diperiksa. Edisi 2D memotong margin transparan saat menggambar. Pada edisi 3D, gambar hero/guardian hanya dipakai pada potret dialog; tokoh di dunia permainan adalah model 3D bersendi.
 
 | Berkas | Jenis | Asal / metode | Penggunaan |
 | --- | --- | --- | --- |
@@ -34,3 +34,11 @@ Aset berikut dibuat khusus menggunakan image_gen bawaan pada16Oktober2026. Selur
 - PPT pertemuan 6–8 digunakan sebagai acuan konsistensi contoh Penjaga Sungai.
 - Konten contoh tidak menjadi bukti bahwa mahasiswa telah membuat atau menguji proyek.
 - Nama game, tokoh, dan dunia pada prototipe merupakan contoh fiktif untuk pembelajaran.
+
+## Dunia dan material 3D
+
+- `renderer3d.js`: geometri asli yang dibentuk melalui kode untuk karakter, perahu, rumah, gudang, dermaga, peti, kunci, pintu air, tanah, vegetasi, batu, dan pegunungan. Objek permainan bukan sprite atau gambar latar yang diberi sudut perspektif.
+- Material kayu, batu, atap, dan bayangan kontak dibuat secara prosedural. Shader air menghitung gelombang, pantulan Fresnel, kilau cahaya, dan buih.
+- Three.js 0.180.0 disertakan lokal pada `vendor/`, dengan lisensi MIT dan verifikasi SHA512 paket asli npm. Tidak memuat dependensi runtime dari CDN.
+- `assets/cover3d.png`: tangkapan langsung canvas WebGL dari versi 3D yang berjalan pada browser uji. Gambar ini hanya untuk kartu sampul, bukan pengganti render dunia saat bermain.
+- Tidak menggunakan aset atau merek dari game AAA komersial. Istilah sinematik menyatakan arah visual, bukan kelas anggaran produksi.

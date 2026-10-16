@@ -4,7 +4,7 @@ Contoh fiktif untuk pembelajaran STI7356, pertemuan 6–8. Dokumen ini dapat die
 
 ## 1. Brief
 
-- **Genre:** petualangan–puzzle 2D, satu pemain.
+- **Genre:** petualangan–puzzle 3D, satu pemain.
 - **Platform:** browser desktop dan perangkat sentuh, ditayangkan melalui GitHub Pages.
 - **Premis:** penjaga muda harus membuka pintu air sebelum banjir mengancam kampung.
 - **Tujuan:** dapatkan kunci, menyeberang, bersihkan jalur, lalu buka pintu air sebelum 240 detik habis.
@@ -41,6 +41,14 @@ RPS menempatkan UTS pada pertemuan 8. Template mencakup keseluruhan semester; do
 - **Dunia:** kampung tepi sungai, dermaga kayu, gudang, perahu warisan, dan pintu air.
 - **Busur cerita:** ancaman → petunjuk → pencarian dan pilihan → hambatan → pemulihan aliran.
 - **Properti bermakna:** tambalan perahu menyiratkan riwayat pemakaian. Narasi perahu warisan menghubungkan perjalanan pemain dengan keluarga.
+
+## Implementasi visual 3D
+
+Versi ini menerapkan alur dari PPT ke dunia 3D nyata dengan Three.js/WebGL: tokoh bersendi dengan animasi berjalan, perahu bergeometri melengkung, bangunan, pepohonan, pintu air yang terangkat, material bertekstur, cahaya, bayangan, serta air bergerak. Kamera mengikuti pemain. Pilihan kualitas mengubah resolusi render dan bayangan, bukan aturan misi.
+
+RPS dan PPT membahas contoh game 2D; perubahan ke 3D mengikuti permintaan pengembangan terbaru. Properti, alur cerita, enam panel, dan pemetaan OBE tetap digunakan. Ini prototipe browser dengan arahan visual sinematik; bukan klaim produksi AAA penuh.
+
+Perangkat yang tidak mendukung WebGL dapat memilih mode 2D secara eksplisit. Model dan aturan misi memakai kode yang sama pada kedua versi.
 
 ## 3.4 Perancangan properti dan environment
 

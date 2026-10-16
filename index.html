@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#12304a">
-  <meta name="description" content="Penjaga Sungai — petualangan 2D tentang properti, pilihan, dan cerita. Selamatkan aliran sungai desa dalam game pendamping STI7356 pertemuan 6–8.">
-  <title>Penjaga Sungai · Sebuah petualangan kecil</title>
+  <meta name="theme-color" content="#07151e">
+  <meta name="description" content="Penjaga Sungai — jelajahi Desa Tepian dalam petualangan 3D sinematik. Temukan kunci, naiki perahu, dan selamatkan sungai. Pendamping STI7356 pertemuan 6–8.">
+  <title>Penjaga Sungai · Petualangan 3D</title>
   <link rel="stylesheet" href="styles.css">
   <script defer src="game.js"></script>
   <script defer src="ui.js"></script>
@@ -39,25 +39,26 @@
       </header>
       <div class="hero wrap">
         <div class="hero-copy">
-          <div class="eyebrow"><span class="status-dot"></span> PETUALANGAN 2D <span class="eyebrow-divider"></span> STI7356</div>
-          <p class="hero-overline">Sebuah kisah tentang kepedulian.</p>
+          <div class="eyebrow"><span class="status-dot"></span> PETUALANGAN 3D <span class="eyebrow-divider"></span> EDISI DESA TEPIAN</div>
+          <p class="hero-overline">Satu sungai. Satu desa. Kamu penjaganya.</p>
           <h1 id="hero-title">Penjaga<br><em>Sungai.</em></h1>
-          <p class="hero-description">Pintu air tertutup. Air mulai naik dan desa membutuhkanmu. Temukan kunci, seberangi sungai, dan buka pintu air tepat waktu.</p>
-          <div class="hero-actions"><button id="start-game" class="button button-primary">Mulai petualangan <svg><use href="#i-arrow"/></svg></button><button class="button button-quiet" data-open-help><span class="play-circle"><svg><use href="#i-play"/></svg></span> Cara bermain</button></div>
-          <p class="hero-note"><span class="little-line"></span> Mainkan dengan keyboard atau sentuhan.</p>
-          <div class="hero-facts"><div><b>01</b><span>desa untuk dijaga</span></div><div><b>04</b><span>langkah petualangan</span></div><div><b>∞</b><span>rasa ingin tahu</span></div></div>
+          <p class="hero-description">Pintu air tertutup. Air mulai naik. Masuki dunia 3D Desa Tepian, temukan kunci, seberangi sungai, dan kembalikan alirannya sebelum terlambat.</p>
+          <div class="hero-actions"><button id="start-game" class="button button-primary" disabled><span id="start-label">Menyiapkan dunia 3D</span> <svg><use href="#i-arrow"/></svg></button><button class="button button-quiet" data-open-help><span class="play-circle"><svg><use href="#i-play"/></svg></span> Cara bermain</button></div>
+          <div class="readiness-panel"><p id="renderer-status" class="renderer-status" role="status" aria-live="polite">Memuat desa, cahaya, dan aliran sungai…</p><a id="fallback-2d" class="fallback-link" href="?mode=2d" hidden>Mainkan versi 2D yang lebih ringan <svg><use href="#i-arrow"/></svg></a></div>
+          <p class="hero-note"><span class="little-line"></span> Tanpa instalasi · Keyboard, klik, atau sentuhan</p>
+          <div class="hero-facts"><div><b>3D</b><span>dunia untuk dijelajahi</span></div><div><b>04</b><span>langkah penyelamatan</span></div><div><b>01</b><span>desa untuk dijaga</span></div></div>
         </div>
-        <div class="hero-visual" aria-label="Ilustrasi dunia permainan: desa hijau di tepi sungai">
+        <div class="hero-visual" aria-label="Pratinjau dunia 3D: desa hijau di tepi sungai">
           <div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div>
           <div class="art-dot dot-one"></div><div class="art-dot dot-two"></div>
           <div class="world-card">
-            <div class="world-art" role="img" aria-label="Peta petualangan desa, perahu, dan pintu air"></div>
+            <div class="world-art" role="img" aria-label="Dunia 3D Desa Tepian, perahu, dan pintu air"></div>
             <div class="art-shade"></div>
-            <div class="art-chip"><span class="status-dot"></span> DESA TEPIAN</div>
+            <div class="art-chip"><span class="status-dot"></span> JELAJAHI DESA TEPIAN</div>
             <div class="art-caption"><span>Perjalanan kecil,<br><strong>arti yang besar.</strong></span><span class="art-compass" aria-hidden="true">✦</span></div>
           </div>
           <div class="mission-tag"><span class="tag-icon"><svg><use href="#i-wave"/></svg></span><span><small>MISI UTAMA</small><strong>Selamatkan desa dari luapan air</strong></span></div>
-          <div class="visual-index"><span>01 /</span> DUNIA PENJAGA SUNGAI <span class="index-line"></span></div>
+          <div class="visual-index"><span>EDISI 3D /</span> DUNIA PENJAGA SUNGAI <span class="index-line"></span></div>
         </div>
       </div>
       <section class="learning-strip wrap" aria-labelledby="learning-title">
@@ -72,19 +73,20 @@
     <section id="game-screen" class="game-screen" hidden aria-label="Permainan Penjaga Sungai">
       <header class="game-header">
         <button id="menu-button" class="brand brand-compact" aria-label="Buka menu permainan"><span class="brand-symbol"><svg><use href="#i-wave"/></svg></span><span>Penjaga Sungai<small>DESA TEPIAN</small></span></button>
-        <div class="game-actions"><button class="icon-button" data-open-help aria-label="Cara bermain"><svg><use href="#i-info"/></svg></button><button id="sound-button" class="icon-button" aria-label="Aktifkan suara" aria-pressed="false"><svg><use id="sound-icon" href="#i-muted"/></svg></button><button id="fullscreen-button" class="icon-button fullscreen-button" aria-label="Perbesar permainan"><svg><use href="#i-expand"/></svg></button><button id="pause-button" class="button pause-button" aria-label="Jeda permainan"><svg><use href="#i-pause"/></svg><span>Jeda</span></button></div>
+        <div class="game-actions"><label class="quality-control" for="quality-select"><span>VISUAL</span><select id="quality-select" aria-label="Kualitas grafik"><option value="auto">Otomatis</option><option value="high">Tinggi</option><option value="low">Ringan</option></select></label><button class="icon-button" data-open-help aria-label="Cara bermain"><svg><use href="#i-info"/></svg></button><button id="sound-button" class="icon-button" aria-label="Aktifkan suara" aria-pressed="false"><svg><use id="sound-icon" href="#i-muted"/></svg></button><button id="fullscreen-button" class="icon-button fullscreen-button" aria-label="Perbesar permainan"><svg><use href="#i-expand"/></svg></button><button id="pause-button" class="button pause-button" aria-label="Jeda permainan"><svg><use href="#i-pause"/></svg><span>Jeda</span></button></div>
       </header>
       <div class="mission-hud">
         <div class="objective-block"><span class="hud-eyebrow">TUJUAN SAAT INI <span id="mission-counter">01 / 04</span></span><h2 id="objective" aria-live="polite">Temui penjaga desa</h2></div>
         <div class="hud-stats"><div class="inventory-stat" id="key-stat"><svg><use href="#i-key"/></svg><div><small>KUNCI</small><strong id="key-label">Belum ditemukan</strong></div></div><div class="inventory-stat"><svg><use href="#i-box"/></svg><div><small>MUATAN</small><strong><span id="cargo-count">0</span><span class="stat-divider"> / </span><span id="cargo-capacity">2</span></strong></div></div><div class="timer-stat" id="timer-stat"><svg><use href="#i-clock"/></svg><span id="timer" aria-label="Waktu tersisa">04:00</span></div></div>
       </div>
       <div class="game-board" id="game-board">
-        <canvas id="gameCanvas" width="1280" height="720" tabindex="0" aria-label="Area permainan. Gerak dengan WASD atau tombol arah. Tekan E atau Spasi untuk interaksi.">Browser Anda perlu mendukung Canvas untuk memainkan Penjaga Sungai.</canvas>
+        <canvas id="gameCanvas" width="1280" height="720" tabindex="0" aria-label="Dunia 3D Penjaga Sungai. Klik tujuan atau gerak dengan WASD dan tombol arah. Tekan E atau Spasi untuk interaksi.">Browser Anda perlu mendukung WebGL untuk memainkan edisi 3D Penjaga Sungai.</canvas>
         <div class="location-label"><span class="status-dot"></span><span id="location-label">Desa Tepian</span></div>
+        <span id="game-renderer-mode" class="renderer-mode">PERSPEKTIF 3D</span>
         <div class="stage-progress" aria-label="Kemajuan misi"><span class="stage-dot is-active" title="Kunci"></span><span class="stage-dot" title="Perahu"></span><span class="stage-dot" title="Peti"></span><span class="stage-dot" title="Pintu air"></span></div>
       </div>
       <div class="control-deck">
-        <div class="keyboard-help"><span class="key-cluster"><kbd>W</kbd><span><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span></span><span>Berjalan</span><span class="control-separator"></span><kbd>E</kbd><span>Interaksi</span><span class="control-separator"></span><kbd>Esc</kbd><span>Jeda</span></div>
+        <div class="keyboard-help"><span class="key-cluster"><kbd>W</kbd><span><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span></span><span>Berjalan / klik tujuan</span><span class="control-separator"></span><kbd>E</kbd><span>Interaksi</span><span class="control-separator"></span><kbd>Esc</kbd><span>Jeda</span></div>
         <div class="touch-pad" aria-label="Kontrol arah"><button class="direction direction-up" data-direction="up" aria-label="Berjalan ke atas"><svg><use href="#i-chevron"/></svg></button><button class="direction direction-left" data-direction="left" aria-label="Berjalan ke kiri"><svg><use href="#i-chevron"/></svg></button><span class="direction-center" aria-hidden="true"><svg><use href="#i-wave"/></svg></span><button class="direction direction-right" data-direction="right" aria-label="Berjalan ke kanan"><svg><use href="#i-chevron"/></svg></button><button class="direction direction-down" data-direction="down" aria-label="Berjalan ke bawah"><svg><use href="#i-chevron"/></svg></button></div>
         <div class="interaction-wrap"><span id="interaction-hint">Dekati objek untuk berinteraksi</span><button id="interact-button" class="button button-primary interact-button" disabled><span class="interact-key">E</span><span id="interact-label">Interaksi</span><svg><use href="#i-arrow"/></svg></button></div>
       </div>
@@ -96,7 +98,7 @@
     <div class="modal-header"><span class="eyebrow">BEKAL PETUALANGAN</span><button class="icon-button" data-close-help aria-label="Tutup cara bermain"><svg><use href="#i-close"/></svg></button></div>
     <h2 id="help-title">Sungai membutuhkanmu.</h2><p class="modal-intro">Pintu air tertutup dan air mulai naik. Ikuti petunjuk penjaga desa untuk membukanya kembali sebelum kampung kebanjiran.</p>
     <ol class="help-steps"><li><span>01</span><div><h3>Temukan kunci</h3><p>Temui penjaga, lalu cari kunci di dekat gudang.</p></div></li><li><span>02</span><div><h3>Seberangi sungai</h3><p>Gunakan perahu. Perhatikan kapasitas dan berat barang bawaanmu.</p></div></li><li><span>03</span><div><h3>Bersihkan jalur</h3><p>Singkirkan tiga peti yang menghalangi jalan menuju pintu air.</p></div></li><li><span>04</span><div><h3>Buka pintu air</h3><p>Gunakan kunci untuk mengembalikan aliran sungai desa.</p></div></li></ol>
-    <div class="help-controls"><div><strong>Keyboard</strong><p><kbd>WASD</kbd> / <kbd>↑ ↓ ← →</kbd> berjalan<br><kbd>E</kbd> / <kbd>Spasi</kbd> interaksi · <kbd>Esc</kbd> jeda</p></div><div><strong>Layar sentuh</strong><p>Gunakan tombol arah di bawah peta dan tombol interaksi untuk objek di dekatmu.</p></div></div>
+    <div class="help-controls"><div><strong>Keyboard &amp; mouse</strong><p><kbd>WASD</kbd> / <kbd>↑ ↓ ← →</kbd> berjalan atau klik tujuan.<br><kbd>E</kbd> / <kbd>Spasi</kbd> interaksi · <kbd>Esc</kbd> jeda</p></div><div><strong>Layar sentuh</strong><p>Sentuh tujuan atau gunakan tombol arah dan interaksi. Pilih visual <strong>Ringan</strong> jika gerakan terasa lambat.</p></div></div>
     <button class="button button-primary modal-primary" data-close-help>Siap menjelajah <svg><use href="#i-arrow"/></svg></button><a href="docs.html" class="modal-doc-link">Lihat catatan rancangan pertemuan 6–8 <svg><use href="#i-arrow"/></svg></a>
   </dialog>
 

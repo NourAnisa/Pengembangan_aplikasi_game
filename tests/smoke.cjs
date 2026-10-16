@@ -4,15 +4,20 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { chromium } = require('playwright');
+const { launchBrowser } = require('./browser.cjs');
 const { POINTS } = require('../game.js');
 
 const baseURL = process.env.SUNGAI_TEST_URL || 'http://127.0.0.1:8000';
 const outputDirectory = process.env.SUNGAI_TEST_OUTPUT || '/tmp/penjaga-sungai-qa';
+const mobileOnly = process.env.SUNGAI_TEST_GROUP === 'mobile';
+const productionOnly = process.env.SUNGAI_TEST_GROUP === 'production';
+const expectedChecks = productionOnly ? 1 : mobileOnly ? 3 : 11;
+const reportFilename = productionOnly ? 'smoke-production-results.json' : mobileOnly ? 'smoke-mobile-results.json' : 'smoke-results.json';
 fs.mkdirSync(outputDirectory, { recursive: true });
 const results = [];
 const browserProblems = [];
 const missingResources = [];
+let fatalError = null;
 
 async function record(name, test) {
   const start = Date.now();
@@ -45,7 +50,7 @@ function observe(page, label) {
 }
 
 const state = page => page.evaluate(() => window.SungaiGame.getState());
-const waitState = (page, expression) => page.waitForFunction(expression, null, { timeout: 6000 });
+const waitState = (page, expression) => page.waitForFunction(expression, null, { timeout: 15000 });
 async function acknowledge(page) {
   await page.locator('#dialogue-dialog').waitFor({ state: 'visible' });
   await page.locator('#dialogue-continue').click();
@@ -66,18 +71,20 @@ async function assertNoHorizontalOverflow(page, label) {
 }
 
 (async () => {
-  const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', headless: true, args: ['--no-sandbox'] });
+  const browser = await launchBrowser();
   let desktop;
   let mobile;
   try {
     desktop = await browser.newContext({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 1 });
     const page = await desktop.newPage();
     observe(page, 'desktop');
+    if (!mobileOnly && !productionOnly) {
     await page.goto(`${baseURL}/?test=1`, { waitUntil: 'networkidle' });
     await waitState(page, () => !!window.SungaiGame);
+    await waitState(page, () => !document.querySelector('#start-game').disabled);
 
     await record('Landing, local assets, PPT and design-document links', async () => {
-      assert.equal(await page.title(), 'Penjaga Sungai · Sebuah petualangan kecil');
+      assert.match(await page.title(), /^Penjaga Sungai.*3D/);
       assert.equal((await state(page)).status, 'title');
       await assertNoHorizontalOverflow(page, 'desktop landing');
       for (const filename of ['assets/world.png', 'assets/hero.png', 'assets/guardian.png', 'assets/boat.png', 'assets/world_open.png', 'docs.html', 'docs/rancangan.md', 'Pertemuan_6_7_8_Properti_Storyboard_Laporan_OBE.pptx']) {
@@ -103,7 +110,7 @@ async function assertNoHorizontalOverflow(page, label) {
     await record('Actual WASD / arrow movement and river-bank collision', async () => {
       const before = await state(page);
       await page.keyboard.down('d');
-      await page.waitForTimeout(300);
+      await page.waitForFunction(x => window.SungaiGame.getState().player.x > x + 20, before.player.x, { timeout: 10000 });
       await page.keyboard.up('d');
       const after = await state(page);
       assert(after.player.x > before.player.x + 20, 'D key did not move the player');
@@ -212,12 +219,20 @@ async function assertNoHorizontalOverflow(page, label) {
       assert.equal((await state(page)).timeRemaining, 240);
       await acknowledge(page);
     });
+    }
 
+    // Release the desktop WebGL world before compiling a second one in the
+    // software-rendered phone context. The gameplay checks above are complete.
+    await page.close();
+
+    if (!productionOnly) {
     mobile = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1, isMobile: true, hasTouch: true });
     const phone = await mobile.newPage();
+    await phone.bringToFront();
     observe(phone, 'phone');
     await phone.goto(`${baseURL}/?test=1`, { waitUntil: 'networkidle' });
     await waitState(phone, () => !!window.SungaiGame);
+    await waitState(phone, () => !document.querySelector('#start-game').disabled);
     await record('Phone landing and dialogs fit 390px viewport', async () => {
       await assertNoHorizontalOverflow(phone, 'phone landing');
       await phone.screenshot({ path: path.join(outputDirectory, 'phone-landing.png'), fullPage: true });
@@ -238,7 +253,7 @@ async function assertNoHorizontalOverflow(page, label) {
       const before = await state(phone);
       const client = await mobile.newCDPSession(phone);
       await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: box.x + box.width / 2, y: box.y + box.height / 2 }] });
-      await phone.waitForTimeout(350);
+      await phone.waitForFunction(x => window.SungaiGame.getState().player.x > x + 20, before.player.x, { timeout: 10000 });
       await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
       await client.detach();
       assert((await state(phone)).player.x > before.player.x + 20, 'Holding touch direction did not move player');
@@ -250,9 +265,12 @@ async function assertNoHorizontalOverflow(page, label) {
       await assertNoHorizontalOverflow(phone, 'phone controls');
       await phone.screenshot({ path: path.join(outputDirectory, 'phone-game.png'), fullPage: true });
     });
+    await mobile.close();
+    }
 
     await record('Production URL omits debugging hooks; browser has no missing assets or runtime errors', async () => {
       const production = await desktop.newPage();
+      await production.bringToFront();
       observe(production, 'production');
       await production.goto(baseURL, { waitUntil: 'networkidle' });
       await waitState(production, () => !!window.SungaiGame);
@@ -262,6 +280,8 @@ async function assertNoHorizontalOverflow(page, label) {
       await production.close();
     });
   } catch (error) {
+    fatalError = error.stack || String(error);
+    console.error(fatalError);
     if (desktop) for (const [index, page] of desktop.pages().entries()) {
       await page.screenshot({ path: path.join(outputDirectory, `failure-desktop-${index}.png`), fullPage: true }).catch(() => {});
     }
@@ -271,9 +291,9 @@ async function assertNoHorizontalOverflow(page, label) {
     process.exitCode = 1;
   } finally {
     await browser.close();
-    const report = { baseURL, generatedAt: new Date().toISOString(), results, browserProblems, missingResources };
-    fs.writeFileSync(path.join(outputDirectory, 'smoke-results.json'), JSON.stringify(report, null, 2));
+    const report = { baseURL, generatedAt: new Date().toISOString(), expectedChecks, results, fatalError, browserProblems, missingResources };
+    fs.writeFileSync(path.join(outputDirectory, reportFilename), JSON.stringify(report, null, 2));
     const passed = results.filter(result => result.passed).length;
-    console.log(`${passed}/${results.length} checks passed. Report: ${path.join(outputDirectory, 'smoke-results.json')}`);
+    console.log(`${passed}/${expectedChecks} checks passed. Report: ${path.join(outputDirectory, reportFilename)}`);
   }
 })();
