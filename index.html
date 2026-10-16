@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#12304a">
+  <meta name="description" content="Penjaga Sungai — petualangan 2D tentang properti, pilihan, dan cerita. Selamatkan aliran sungai desa dalam game pendamping STI7356 pertemuan 6–8.">
+  <title>Penjaga Sungai · Sebuah petualangan kecil</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="game.js"></script>
+  <script defer src="ui.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Lewati ke konten</a>
+  <svg class="svg-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
+    <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 8c3-4 5 4 8 0s5 4 8 0 4 0 4 0M2 13c3-4 5 4 8 0s5 4 8 0 4 0 4 0M2 18c3-4 5 4 8 0s5 4 8 0 4 0 4 0"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="9" r="4"/><path d="m11 12 8 8m-3-3 2-2m-5-1 2-2"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24"><path d="m3 7 9-4 9 4v11l-9 4-9-4V7Zm0 0 9 4 9-4M12 11v11m-5-17 9 4"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4V9Zm13-2c4 2 4 8 0 10m-1-7c1 1 1 3 0 4"/></symbol>
+    <symbol id="i-muted" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4V9Zm13 0 5 6m0-6-5 6"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 4 12 8-12 8V4Z"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><path d="M4 9V4h5m6 0h5v5m0 6v5h-5M9 20H4v-5"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5v15M3 4c3-1 6 0 9 2 3-2 6-3 9-2v15c-3-1-6 0-9 2-3-2-6-3-9-2V4Z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v.1"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m8 4 8 8-8 8"/></symbol>
+  </defs></svg>
+
+  <main id="main">
+    <section id="landing" class="landing" aria-labelledby="hero-title">
+      <header class="site-header wrap">
+        <a class="brand" href="./" aria-label="Penjaga Sungai, beranda"><span class="brand-symbol"><svg><use href="#i-wave"/></svg></span><span>tepian<span class="brand-dot">.</span><small>cerita dari sungai</small></span></a>
+        <nav class="header-nav" aria-label="Navigasi utama"><button class="text-button" data-open-help>Tentang misi</button><a href="docs.html" class="nav-document">Catatan rancangan <svg><use href="#i-arrow"/></svg></a></nav>
+      </header>
+      <div class="hero wrap">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="status-dot"></span> PETUALANGAN 2D <span class="eyebrow-divider"></span> STI7356</div>
+          <p class="hero-overline">Sebuah kisah tentang kepedulian.</p>
+          <h1 id="hero-title">Penjaga<br><em>Sungai.</em></h1>
+          <p class="hero-description">Pintu air tertutup. Air mulai naik dan desa membutuhkanmu. Temukan kunci, seberangi sungai, dan buka pintu air tepat waktu.</p>
+          <div class="hero-actions"><button id="start-game" class="button button-primary">Mulai petualangan <svg><use href="#i-arrow"/></svg></button><button class="button button-quiet" data-open-help><span class="play-circle"><svg><use href="#i-play"/></svg></span> Cara bermain</button></div>
+          <p class="hero-note"><span class="little-line"></span> Mainkan dengan keyboard atau sentuhan.</p>
+          <div class="hero-facts"><div><b>01</b><span>desa untuk dijaga</span></div><div><b>04</b><span>langkah petualangan</span></div><div><b>∞</b><span>rasa ingin tahu</span></div></div>
+        </div>
+        <div class="hero-visual" aria-label="Ilustrasi dunia permainan: desa hijau di tepi sungai">
+          <div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div>
+          <div class="art-dot dot-one"></div><div class="art-dot dot-two"></div>
+          <div class="world-card">
+            <div class="world-art" role="img" aria-label="Peta petualangan desa, perahu, dan pintu air"></div>
+            <div class="art-shade"></div>
+            <div class="art-chip"><span class="status-dot"></span> DESA TEPIAN</div>
+            <div class="art-caption"><span>Perjalanan kecil,<br><strong>arti yang besar.</strong></span><span class="art-compass" aria-hidden="true">✦</span></div>
+          </div>
+          <div class="mission-tag"><span class="tag-icon"><svg><use href="#i-wave"/></svg></span><span><small>MISI UTAMA</small><strong>Selamatkan desa dari luapan air</strong></span></div>
+          <div class="visual-index"><span>01 /</span> DUNIA PENJAGA SUNGAI <span class="index-line"></span></div>
+        </div>
+      </div>
+      <section class="learning-strip wrap" aria-labelledby="learning-title">
+        <div class="learning-heading"><span class="eyebrow">DARI KELAS KE PETUALANGAN</span><h2 id="learning-title">Setiap objek punya cerita.</h2></div>
+        <div class="learning-item"><span class="learning-number">06</span><div><h3>Properti &amp; peran</h3><p>Kunci, perahu, peti, dan pintu air membentuk aturan permainan.</p></div></div>
+        <div class="learning-item"><span class="learning-number">07</span><div><h3>Alur &amp; storyboard</h3><p>Ikuti tujuan, hadapi hambatan, dan selesaikan cerita desa.</p></div></div>
+        <div class="learning-item"><span class="learning-number">08</span><div><h3>Review &amp; refleksi</h3><p>Amati keputusan desain untuk melengkapi laporan rancangan.</p></div></div>
+      </section>
+      <footer class="site-footer wrap"><span>Petualangan pendamping Pengembangan Aplikasi Game</span><a href="Pertemuan_6_7_8_Properti_Storyboard_Laporan_OBE.pptx" download>Materi pertemuan 6–8 <svg><use href="#i-arrow"/></svg></a></footer>
+    </section>
+
+    <section id="game-screen" class="game-screen" hidden aria-label="Permainan Penjaga Sungai">
+      <header class="game-header">
+        <button id="menu-button" class="brand brand-compact" aria-label="Buka menu permainan"><span class="brand-symbol"><svg><use href="#i-wave"/></svg></span><span>Penjaga Sungai<small>DESA TEPIAN</small></span></button>
+        <div class="game-actions"><button class="icon-button" data-open-help aria-label="Cara bermain"><svg><use href="#i-info"/></svg></button><button id="sound-button" class="icon-button" aria-label="Aktifkan suara" aria-pressed="false"><svg><use id="sound-icon" href="#i-muted"/></svg></button><button id="fullscreen-button" class="icon-button fullscreen-button" aria-label="Perbesar permainan"><svg><use href="#i-expand"/></svg></button><button id="pause-button" class="button pause-button" aria-label="Jeda permainan"><svg><use href="#i-pause"/></svg><span>Jeda</span></button></div>
+      </header>
+      <div class="mission-hud">
+        <div class="objective-block"><span class="hud-eyebrow">TUJUAN SAAT INI <span id="mission-counter">01 / 04</span></span><h2 id="objective" aria-live="polite">Temui penjaga desa</h2></div>
+        <div class="hud-stats"><div class="inventory-stat" id="key-stat"><svg><use href="#i-key"/></svg><div><small>KUNCI</small><strong id="key-label">Belum ditemukan</strong></div></div><div class="inventory-stat"><svg><use href="#i-box"/></svg><div><small>MUATAN</small><strong><span id="cargo-count">0</span><span class="stat-divider"> / </span><span id="cargo-capacity">2</span></strong></div></div><div class="timer-stat" id="timer-stat"><svg><use href="#i-clock"/></svg><span id="timer" aria-label="Waktu tersisa">04:00</span></div></div>
+      </div>
+      <div class="game-board" id="game-board">
+        <canvas id="gameCanvas" width="1280" height="720" tabindex="0" aria-label="Area permainan. Gerak dengan WASD atau tombol arah. Tekan E atau Spasi untuk interaksi.">Browser Anda perlu mendukung Canvas untuk memainkan Penjaga Sungai.</canvas>
+        <div class="location-label"><span class="status-dot"></span><span id="location-label">Desa Tepian</span></div>
+        <div class="stage-progress" aria-label="Kemajuan misi"><span class="stage-dot is-active" title="Kunci"></span><span class="stage-dot" title="Perahu"></span><span class="stage-dot" title="Peti"></span><span class="stage-dot" title="Pintu air"></span></div>
+      </div>
+      <div class="control-deck">
+        <div class="keyboard-help"><span class="key-cluster"><kbd>W</kbd><span><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span></span><span>Berjalan</span><span class="control-separator"></span><kbd>E</kbd><span>Interaksi</span><span class="control-separator"></span><kbd>Esc</kbd><span>Jeda</span></div>
+        <div class="touch-pad" aria-label="Kontrol arah"><button class="direction direction-up" data-direction="up" aria-label="Berjalan ke atas"><svg><use href="#i-chevron"/></svg></button><button class="direction direction-left" data-direction="left" aria-label="Berjalan ke kiri"><svg><use href="#i-chevron"/></svg></button><span class="direction-center" aria-hidden="true"><svg><use href="#i-wave"/></svg></span><button class="direction direction-right" data-direction="right" aria-label="Berjalan ke kanan"><svg><use href="#i-chevron"/></svg></button><button class="direction direction-down" data-direction="down" aria-label="Berjalan ke bawah"><svg><use href="#i-chevron"/></svg></button></div>
+        <div class="interaction-wrap"><span id="interaction-hint">Dekati objek untuk berinteraksi</span><button id="interact-button" class="button button-primary interact-button" disabled><span class="interact-key">E</span><span id="interact-label">Interaksi</span><svg><use href="#i-arrow"/></svg></button></div>
+      </div>
+      <p class="game-footnote"><svg><use href="#i-wave"/></svg> Langkah kecilmu mengembalikan kehidupan sungai.</p>
+    </section>
+  </main>
+
+  <dialog id="help-dialog" class="modal help-modal" aria-labelledby="help-title">
+    <div class="modal-header"><span class="eyebrow">BEKAL PETUALANGAN</span><button class="icon-button" data-close-help aria-label="Tutup cara bermain"><svg><use href="#i-close"/></svg></button></div>
+    <h2 id="help-title">Sungai membutuhkanmu.</h2><p class="modal-intro">Pintu air tertutup dan air mulai naik. Ikuti petunjuk penjaga desa untuk membukanya kembali sebelum kampung kebanjiran.</p>
+    <ol class="help-steps"><li><span>01</span><div><h3>Temukan kunci</h3><p>Temui penjaga, lalu cari kunci di dekat gudang.</p></div></li><li><span>02</span><div><h3>Seberangi sungai</h3><p>Gunakan perahu. Perhatikan kapasitas dan berat barang bawaanmu.</p></div></li><li><span>03</span><div><h3>Bersihkan jalur</h3><p>Singkirkan tiga peti yang menghalangi jalan menuju pintu air.</p></div></li><li><span>04</span><div><h3>Buka pintu air</h3><p>Gunakan kunci untuk mengembalikan aliran sungai desa.</p></div></li></ol>
+    <div class="help-controls"><div><strong>Keyboard</strong><p><kbd>WASD</kbd> / <kbd>↑ ↓ ← →</kbd> berjalan<br><kbd>E</kbd> / <kbd>Spasi</kbd> interaksi · <kbd>Esc</kbd> jeda</p></div><div><strong>Layar sentuh</strong><p>Gunakan tombol arah di bawah peta dan tombol interaksi untuk objek di dekatmu.</p></div></div>
+    <button class="button button-primary modal-primary" data-close-help>Siap menjelajah <svg><use href="#i-arrow"/></svg></button><a href="docs.html" class="modal-doc-link">Lihat catatan rancangan pertemuan 6–8 <svg><use href="#i-arrow"/></svg></a>
+  </dialog>
+
+  <dialog id="dialogue-dialog" class="modal dialogue-modal" aria-labelledby="dialogue-title" aria-describedby="dialogue-text">
+    <div class="dialogue-person"><div class="portrait" aria-hidden="true"><img id="dialogue-portrait" src="assets/guardian.png" alt=""></div><span id="dialogue-speaker" class="eyebrow">PENJAGA DESA</span></div><h2 id="dialogue-title">Selamat datang, Penjaga Sungai.</h2><p id="dialogue-text"></p><button id="dialogue-continue" class="button button-primary modal-primary"><span>Lanjutkan</span><svg><use href="#i-arrow"/></svg></button><span class="dialogue-note">Waktu berhenti selama percakapan.</span>
+  </dialog>
+
+  <dialog id="pause-dialog" class="modal pause-modal" aria-labelledby="pause-title"><span class="modal-emblem"><svg><use href="#i-pause"/></svg></span><span class="eyebrow">TARIK NAPAS SEJENAK</span><h2 id="pause-title">Sungai bisa menunggu.</h2><p>Petualangan dan waktu permainan dijeda.<br>Lanjutkan saat kamu siap.</p><div class="modal-actions"><button id="resume-button" class="button button-primary">Lanjutkan <svg><use href="#i-play"/></svg></button><button id="restart-button" class="button button-outline">Mulai ulang</button><button id="return-home-button" class="text-button">Kembali ke beranda</button></div></dialog>
+
+  <dialog id="ending-dialog" class="modal ending-modal" aria-labelledby="ending-title" aria-describedby="ending-text"><span id="ending-emblem" class="modal-emblem"><svg><use href="#i-wave"/></svg></span><span id="ending-eyebrow" class="eyebrow">SEBUAH AKHIR, SEBUAH AWAL</span><h2 id="ending-title">Sungai kembali mengalir.</h2><p id="ending-text"></p><div id="ending-stats" class="ending-stats"></div><div class="reflection-note"><svg><use href="#i-book"/></svg><p><strong>Bawa cerita ini ke kelas.</strong> Apa peran kunci, perahu, dan peti dalam membentuk tantangan? Catat pengalamanmu untuk review rancangan.</p></div><div class="modal-actions"><button id="play-again-button" class="button button-primary">Main lagi <svg><use href="#i-arrow"/></svg></button><button id="view-world-button" class="button button-outline">Lihat sungai yang terselamatkan</button><a class="button button-outline" href="docs.html">Catatan rancangan</a><button id="ending-home-button" class="text-button">Kembali ke beranda</button></div></dialog>
+  <div id="announcement" class="sr-only" role="status" aria-live="polite"></div>
+  <noscript><div class="noscript">Aktifkan JavaScript untuk memulai petualangan Penjaga Sungai.</div></noscript>
+</body>
+</html>

@@ -1,0 +1,54 @@
+name: Publish Penjaga Sungai
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'styles.css'
+      - 'ui.js'
+      - 'game.js'
+      - 'engine.js'
+      - 'docs.html'
+      - 'docs/**'
+      - 'assets/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Prepare static site
+        run: |
+          mkdir -p _site
+          cp index.html styles.css ui.js game.js docs.html _site/
+          if [ -f engine.js ]; then cp engine.js _site/; fi
+          cp -R assets docs _site/
+          cp Pertemuan_6_7_8_Properti_Storyboard_Laporan_OBE.pptx _site/
+          cp STI7356-Pengembangan_Aplikasi_Game.pdf _site/
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
